@@ -30,6 +30,6 @@ func RegisterHandler(db *repository.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusCreated, gin.H{"message": "User created successfully"})
+		c.JSON(http.StatusOK, gin.H{"message": "User created successfully"})
 	}
 }
