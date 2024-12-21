@@ -19,12 +19,16 @@ func InitDb() (*DB, error) {
 		log.Printf("Error opening database connection: %v\n", err)
 		return nil, err
 	}
+	
 	if err := db.Ping(); err != nil {
 		log.Printf("Error pinging database: %v\n", err)
 		return nil, err
 	}
+	
 	log.Println("Database connection successfully initialized.")
+
 	err = createTable(db)
+	
 	if err != nil {
 		log.Printf("Error creating table: %v\n", err)
 		return nil, err
