@@ -19,7 +19,7 @@ func GetUserByIdHandler(db *repository.DB) gin.HandlerFunc {
 		user, err := services.GetUserById(db, id)
 
 		if err != nil {
-			c.JSON(http., gin.H{"error": err.Error()})
+			c.JSON(500, gin.H{"error": err.Error()})
 			return
 		}
 		c.JSON(200, user)
