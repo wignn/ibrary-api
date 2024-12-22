@@ -2,6 +2,8 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
+
 	"github.com/wignn/library-api/internal/model"
 )
 
@@ -22,7 +24,6 @@ func GetUserById(db *DB, id int) (*model.GetUserResponse, error) {
 	} else {
 		user.ProfilePicture = nil
 	}
-
 	return &user, nil
 }
 
@@ -45,14 +46,13 @@ func GetUserByUsername(db *DB, username string) (*model.User, error) {
 	return &user, nil
 }
 
-
 func UpdateUserProfile(db *DB, user *model.User) (*model.User, error) {
 	var currentUser *model.GetUserResponse
 	currentUser, err := GetUserById(db, user.ID)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	if user.Username == "" {
 		user.Username = currentUser.Username
 	}
@@ -72,8 +72,21 @@ func UpdateUserProfile(db *DB, user *model.User) (*model.User, error) {
 	return user, nil
 }
 
-
 func UpdateUserToken(db *DB, id int, token string) error {
 	_, err := db.Exec(`UPDATE users SET token = $1 WHERE id = $2`, token, id)
+	return err
+}
+
+func ResetPassword(db *DB, id int, hashedPassword, token string) error {
+	var user model.User
+	err := db.QueryRow(`SELECT id FROM users WHERE id = $1 AND token = $2`, id, token).Scan(&user.ID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return fmt.Errorf("User not found")
+		}
+		return err
+	}
+
+	_, err = db.Exec(`UPDATE users SET password = $1 WHERE id = $2`, hashedPassword, id)
 	return err
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/wignn/library-api/internal/model"
 	"github.com/wignn/library-api/internal/repository"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func GetUserById(db *repository.DB, id int) (*model.GetUserResponse, error) {
@@ -38,8 +39,12 @@ func SendEmailVerification(db *repository.DB, id int) error {
 		return err
 	}
 
-	err = repository.UpdateUserToken(db, user.ID, token.String())
+    err = repository.UpdateUserToken(db, user.ID, token.String())
 
+    if err != nil {
+        log.Printf("Error updating user token: %v\n", err)
+        return err
+    }
 	verificationURL := fmt.Sprintf("http://localhost/auth/reset/%s", token.String())
 
 	htmlMessage := fmt.Sprintf(`
@@ -118,4 +123,14 @@ func SendEmailVerification(db *repository.DB, id int) error {
 
 	log.Printf("Verification email sent to %s\n", user.Email)
 	return nil
+}
+
+
+func ResetPassword(db *repository.DB, id int, newPassword, token string) error {
+    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+    if err != nil {
+        return err
+    }
+
+ return repository.ResetPassword(db, id, string(hashedPassword), token)
 }

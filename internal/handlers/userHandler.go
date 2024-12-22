@@ -60,7 +60,6 @@ func UpdateUserHandler(db *repository.DB) gin.HandlerFunc {
 	}
 }
 
-
 func VerifyEmailHandler(db *repository.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.Atoi(c.Param("id"))
@@ -77,5 +76,27 @@ func VerifyEmailHandler(db *repository.DB) gin.HandlerFunc {
 			return
 		}
 		c.JSON(http.StatusOK, gin.H{"message": "Email sent successfully"})
+	}
+}
+
+func ResetPasswordHandler(db *repository.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("id"))
+		newPassword := c.PostForm("password")
+		token := c.PostForm("token")
+		if err != nil {
+			log.Printf("Error converting ID: %v", err)
+			c.JSON(400, gin.H{"error": "Invalid ID"})
+			return
+		}
+
+		err = services.ResetPassword(db, id, newPassword, token)
+
+		if err != nil {
+			log.Printf("Error resetting password: %v", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "Password reset successfully"})
 	}
 }
