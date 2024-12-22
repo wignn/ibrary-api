@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/wignn/library-api/internal/auth"
 	"github.com/wignn/library-api/internal/handlers"
 	"github.com/wignn/library-api/internal/repository"
 )
@@ -17,6 +18,10 @@ func InitRoutes(r *gin.Engine, db *repository.DB) {
 	{
 		apiV1.POST("/login", handlers.LoginHandler(db))
 		apiV1.POST("/register", handlers.RegisterHandler(db))
-		apiV1.GET("/users/:id", handlers.GetUserByIdHandler(db))
+		aunthenticated := apiV1.Group("/")
+		aunthenticated.Use(auth.AuthMIddleware())
+		aunthenticated.GET("/users/:id", handlers.GetUserByIdHandler(db))
+		aunthenticated.PUT("/users/:id", handlers.UpdateUserHandler(db))
+
 	}
 }

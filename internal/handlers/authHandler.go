@@ -25,7 +25,7 @@ func LoginHandler(db *repository.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"token": token})
+		c.JSON(http.StatusOK, gin.H{"data": token})
 	}
 }
 

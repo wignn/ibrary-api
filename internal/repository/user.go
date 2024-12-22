@@ -30,7 +30,7 @@ func GetUserById(db *DB, id int) (*model.User, error) {
 
 func GetUserByUsername(db *DB, username string) (*model.User, error) {
 	var user model.User
-	err := db.QueryRow(`SELECT id, username, email, profile_picture, password, is_active, is_admin, created_at, updated_at FROM users WHERE username = $1`, username).Scan(
+	err := db.QueryRow(`SELECT id, username, email, profile_picture, is_active, is_admin, created_at, updated_at FROM users WHERE username = $1`, username).Scan(
 		&user.ID,
 		&user.Username,
 		&user.Email,
