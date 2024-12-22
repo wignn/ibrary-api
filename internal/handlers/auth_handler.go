@@ -3,15 +3,16 @@ package handlers
 import (
 	"net/http"
 	"github.com/gin-gonic/gin"
+	"fmt"
 	"github.com/wignn/library-api/internal/model"
-	"github.com/tigfi/library/internal/repository"
+	"github.com/wignn/library-api/internal/repository"
 	"github.com/wignn/library-api/internal/services"
 )
 
 func LoginHandler(db *repository.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// var user model.User
-
+		var user model.User;
+		fmt.Println(user)
 	}
 }
 
@@ -32,8 +33,3 @@ func RegisterHandler(db *repository.DB) gin.HandlerFunc {
 	}
 }
 
-func GetUserByIdHandler(db *repository.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
-
-	}
-}
