@@ -8,6 +8,6 @@ type User struct {
 	CreatedAt      string `json:"created_at"`
 	UpdatedAt      string `json:"updated_at"`
 	IsAdmin        bool   `json:"is_admin"`
-	ProfilePicture string `json:"profile_picture"`
+	ProfilePicture *string `json:"profile_picture"`
 	IsActive       bool   `json:"is_active"`
 }
