@@ -19,9 +19,11 @@ func InitRoutes(r *gin.Engine, db *repository.DB) {
 		apiV1.POST("/login", handlers.LoginHandler(db))
 		apiV1.POST("/register", handlers.RegisterHandler(db))
 		aunthenticated := apiV1.Group("/")
-		aunthenticated.Use(auth.AuthMIddleware())
-		aunthenticated.GET("/users/:id", handlers.GetUserByIdHandler(db))
-		aunthenticated.PUT("/users/:id", handlers.UpdateUserHandler(db))
-
+		{
+			aunthenticated.Use(auth.AuthMIddleware())
+			aunthenticated.GET("/users/:id", handlers.GetUserByIdHandler(db))
+			aunthenticated.PUT("/users/:id", handlers.UpdateUserHandler(db))
+			aunthenticated.POST("/users/:id/verify-email", handlers.VerifyEmailHandler(db))
+		}
 	}
 }
