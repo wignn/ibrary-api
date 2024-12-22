@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -19,9 +20,9 @@ func GetUserByIdHandler(db *repository.DB) gin.HandlerFunc {
 		user, err := services.GetUserById(db, id)
 
 		if err != nil {
-			c.JSON(500, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(200, user)
+		c.JSON(http.StatusOK, user)
 	}
 }

@@ -17,6 +17,6 @@ func InitRoutes(r *gin.Engine, db *repository.DB) {
 	{
 		apiV1.POST("/login", handlers.LoginHandler(db))
 		apiV1.POST("/register", handlers.RegisterHandler(db))
-		// apiV1.GET("/users/:id", handlers.GetUserByIdHandler(db))
+		apiV1.GET("/users/:id", handlers.GetUserByIdHandler(db))
 	}
 }

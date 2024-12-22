@@ -14,7 +14,7 @@ func CreateUser(db *DB, user *model.User) error {
 func GetUserById(db *DB, id int) (*model.User, error) {
 	var user model.User
 	var profilePicture sql.NullString
-	err := db.QueryRow(`SELECT * FROM users WHERE id = $1`, id).Scan(&user.ID, &user.Username, &user.Email, &profilePicture, &user.CreatedAt, &user.UpdatedAt, )
+	err := db.QueryRow(`SELECT id, username, email, profile_picture, created_at, updated_at FROM users WHERE id = $1`, id).Scan(&user.ID, &user.Username, &user.Email, &profilePicture, &user.CreatedAt, &user.UpdatedAt, )
 	if err != nil {
 		return nil, err
 	}
