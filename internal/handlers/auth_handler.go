@@ -2,17 +2,15 @@ package handlers
 
 import (
 	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/wignn/library-api/internal/model"
-	"github.com/wignn/library-api/internal/repository"
+	"github.com/tigfi/library/internal/repository"
 	"github.com/wignn/library-api/internal/services"
 )
 
 func LoginHandler(db *repository.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// var user model.User
-
 
 	}
 }
@@ -31,5 +29,11 @@ func RegisterHandler(db *repository.DB) gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusOK, gin.H{"message": "User created successfully"})
+	}
+}
+
+func GetUserByIdHandler(db *repository.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+
 	}
 }

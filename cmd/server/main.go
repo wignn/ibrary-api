@@ -17,6 +17,7 @@ func main() {
 	port := os.Getenv("PORT")
 
 	db, err := repository.InitDb()
+
 	if err != nil {
 		panic(err)
 	}
@@ -25,7 +26,8 @@ func main() {
 	r := gin.Default()
 
 	routes.InitRoutes(r, db)
-	if err := r.Run(port); err != nil {
+
+	if err := r.Run(":" + port); err != nil {
 		panic(err)
 	}
 }

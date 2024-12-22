@@ -7,12 +7,16 @@ import (
 )
 
 func InitRoutes(r *gin.Engine, db *repository.DB) {
-	//auth route
 	r.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{
 			"message": "api working",
 		})
 	})
-	r.POST("/login", handlers.LoginHandler(db))	
-	r.POST("/register", handlers.RegisterHandler(db))	
+
+	apiV1 := r.Group("/api/v1")
+	{
+		apiV1.POST("/login", handlers.LoginHandler(db))
+		apiV1.POST("/register", handlers.RegisterHandler(db))
+		apiV1.GET("users/:id", handlers.GetUserByIdHandler()())
+	}
 }
