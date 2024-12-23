@@ -1,6 +1,0 @@
-POST http://localhost:8080/api/v1/users/1/picture HTTP/1.1
-content-type: application/json
-
-{
-    
-}

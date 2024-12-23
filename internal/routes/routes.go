@@ -22,9 +22,14 @@ func InitRoutes(r *gin.Engine, db *repository.DB) {
 		apiV1.PUT("/users/:id/reset-password", handlers.ResetPasswordHandler(db))
 		aunthenticated := apiV1.Group("/")
 		{
+			//user route
 			aunthenticated.Use(auth.AuthMIddleware())
 			aunthenticated.GET("/users/:id", handlers.GetUserByIdHandler(db))
 			aunthenticated.PUT("/users/:id", handlers.UpdateUserHandler(db))
+			
+
+			//book route
+			aunthenticated.POST("/books", handlers.GetBooksHandler(db))
 		}
 	}
 }

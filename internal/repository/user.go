@@ -84,7 +84,7 @@ func ResetPassword(db *DB, id int, hashedPassword, token string) error {
 			log.Println("No user found")
 			return err
 		} else {
-			log.Panicln("Query error: %v", err)
+			log.Panicf("Query error: %v", err)
 			return err
 		}
 	}
