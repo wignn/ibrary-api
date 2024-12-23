@@ -129,6 +129,7 @@ func SendEmailVerification(db *repository.DB, id int) error {
 func ResetPassword(db *repository.DB, id int, newPassword, token string) error {
     hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
     if err != nil {
+        log.Printf("Error hashing password: %v\n", err)
         return err
     }
 

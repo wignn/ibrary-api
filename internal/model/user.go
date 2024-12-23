@@ -1,23 +1,23 @@
 package model
 
 type User struct {
-	ID             int    `json:"id"`
-	Username       string `json:"username"`
-	Email          string `json:"email"`
-	Password       string `json:"password"`
-	CreatedAt      string `json:"created_at"`
-	UpdatedAt      string `json:"updated_at"`
-	IsAdmin        bool   `json:"is_admin"`
+	ID             int     `json:"id"`
+	Username       string  `json:"username"`
+	Email          string  `json:"email"`
+	Password       string  `json:"password"`
+	CreatedAt      string  `json:"created_at"`
+	UpdatedAt      string  `json:"updated_at"`
+	IsAdmin        bool    `json:"is_admin"`
 	ProfilePicture *string `json:"profile_picture"`
-	IsActive       bool   `json:"is_active"`
+	IsActive       bool    `json:"is_active"`
+	Token          *string `json:"token"`
 }
 
-
 type GetUserResponse struct {
-    ID             int     `json:"id"`
-    Username       string  `json:"username"`
-    Email          string  `json:"email"`
-    ProfilePicture *string `json:"profile_picture"`
-    CreatedAt      string  `json:"created_at"`
-    UpdatedAt      string  `json:"updated_at"`
+	ID             int     `json:"id"`
+	Username       string  `json:"username"`
+	Email          string  `json:"email"`
+	ProfilePicture *string `json:"profile_picture"`
+	CreatedAt      string  `json:"created_at"`
+	UpdatedAt      string  `json:"updated_at"`
 }

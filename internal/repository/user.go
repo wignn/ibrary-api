@@ -2,8 +2,7 @@ package repository
 
 import (
 	"database/sql"
-	"fmt"
-
+	"log"
 	"github.com/wignn/library-api/internal/model"
 )
 
@@ -79,14 +78,20 @@ func UpdateUserToken(db *DB, id int, token string) error {
 
 func ResetPassword(db *DB, id int, hashedPassword, token string) error {
 	var user model.User
-	err := db.QueryRow(`SELECT id FROM users WHERE id = $1 AND token = $2`, id, token).Scan(&user.ID)
+	err := db.QueryRow(`SELECT id FROM users WHERE id = $1 AND token = $2`, id, token).Scan(&user.ID, &user.Token)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return fmt.Errorf("User not found")
+			log.Println("No user found")
+			return err
+		} else {
+			log.Panicln("Query error: %v", err)
+			return err
 		}
+	}
+	_, err = db.Exec(`UPDATE users SET password = $1, token= $2 WHERE id = $3`, hashedPassword, nil, id)
+	if err != nil {
+		log.Printf("Error updating user password: %v\n", err)
 		return err
 	}
-
-	_, err = db.Exec(`UPDATE users SET password = $1 WHERE id = $2`, hashedPassword, id)
 	return err
 }

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+
 	"log"
 	"net/http"
 	"strconv"
@@ -82,17 +83,25 @@ func VerifyEmailHandler(db *repository.DB) gin.HandlerFunc {
 func ResetPasswordHandler(db *repository.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.Atoi(c.Param("id"))
-		newPassword := c.PostForm("password")
-		token := c.PostForm("token")
+
+		var UserBody struct {
+			Password string `json:"password"`
+			Token    string `json:"token"`
+		}
+
+		if err := c.ShouldBindJSON(&UserBody); err != nil {
+			log.Printf("Error binding JSON: %v", err)
+			c.JSON(400, gin.H{"error": "Invalid request payload"})
+			return
+		}
 		if err != nil {
 			log.Printf("Error converting ID: %v", err)
 			c.JSON(400, gin.H{"error": "Invalid ID"})
 			return
 		}
 
-		err = services.ResetPassword(db, id, newPassword, token)
 
-		if err != nil {
+		if err := services.ResetPassword(db, id, UserBody.Password, UserBody.Token); err != nil {
 			log.Printf("Error resetting password: %v", err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 			return
