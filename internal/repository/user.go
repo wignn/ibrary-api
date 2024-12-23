@@ -71,8 +71,9 @@ func UpdateUserProfile(db *DB, user *model.User) (*model.User, error) {
 	return user, nil
 }
 
-func UpdateUserToken(db *DB, id int, token string) error {
-	_, err := db.Exec(`UPDATE users SET token = $1 WHERE id = $2`, token, id)
+func UpdateUserToken(db *DB, user *model.User) error {
+	log.Println("Updating user token ", *user.Token, user.ID)
+	_, err := db.Exec(`UPDATE users SET token = $1 WHERE id = $2`, *user.Token, user.ID)
 	return err
 }
 

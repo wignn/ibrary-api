@@ -27,24 +27,31 @@ func UpdateUserProfile(db *repository.DB, id int, username, profilePicture, emai
 	return repository.UpdateUserProfile(db, user)
 }
 func SendEmailVerification(db *repository.DB, id int) error {
-	user, err := repository.GetUserById(db, id)
-	if err != nil {
-		log.Printf("Error getting user by id: %v\n", err)
-		return err
-	}
-
-	token, err := uuid.NewRandom()
+    token, err := uuid.NewRandom()
 	if err != nil {
 		log.Printf("Error generating UUID: %v\n", err)
 		return err
 	}
 
-    err = repository.UpdateUserToken(db, user.ID, token.String())
+	tokenString := token.String()
+    currentUser, err := repository.GetUserById(db, id)
 
     if err != nil {
-        log.Printf("Error updating user token: %v\n", err)
+        log.Printf("Error fetching user: %v\n", err)
         return err
     }
+
+    user := &model.User{
+        ID:    id,
+        Token: &tokenString,
+    }
+
+	err = repository.UpdateUserToken(db, user)
+
+	if err != nil {
+		log.Printf("Error updating user token: %v\n", err)
+		return err
+	}
 	verificationURL := fmt.Sprintf("http://localhost/auth/reset/%s", token.String())
 
 	htmlMessage := fmt.Sprintf(`
@@ -105,14 +112,14 @@ func SendEmailVerification(db *repository.DB, id int) error {
         </div>
     </body>
     </html>
-`, user.Username, verificationURL)
+`, currentUser.Username, verificationURL)
 
 	auth := smtp.PlainAuth("", os.Getenv("EMAIL_USERNAME"), os.Getenv("EMAIL_PASSWORD"), "smtp.gmail.com")
-	to := []string{user.Email}
+	to := []string{currentUser.Email}
 
 	msg := []byte(fmt.Sprintf(
 		"From: %s\r\nTo: %s\r\nSubject: Email Verification\r\nMIME-Version: 1.0\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n%s",
-		os.Getenv("EMAIL_USERNAME"), user.Email, htmlMessage,
+		os.Getenv("EMAIL_USERNAME"), currentUser.Email, htmlMessage,
 	))
 
 	err = smtp.SendMail("smtp.gmail.com:587", auth, os.Getenv("EMAIL_USERNAME"), to, msg)
@@ -121,17 +128,16 @@ func SendEmailVerification(db *repository.DB, id int) error {
 		return err
 	}
 
-	log.Printf("Verification email sent to %s\n", user.Email)
+	log.Printf("Verification email sent to %s\n", currentUser.Email)
 	return nil
 }
 
-
 func ResetPassword(db *repository.DB, id int, newPassword, token string) error {
-    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
-    if err != nil {
-        log.Printf("Error hashing password: %v\n", err)
-        return err
-    }
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+	if err != nil {
+		log.Printf("Error hashing password: %v\n", err)
+		return err
+	}
 
- return repository.ResetPassword(db, id, string(hashedPassword), token)
+	return repository.ResetPassword(db, id, string(hashedPassword), token)
 }

@@ -21,11 +21,10 @@ func LoginUser(db *repository.DB, username, password string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
 	
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-
 		return "", err
 	}
+	
 	return utils.GenerateToken(user.Username, user.ID, user.IsAdmin)
 }
