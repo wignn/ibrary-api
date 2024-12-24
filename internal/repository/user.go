@@ -3,6 +3,8 @@ package repository
 import (
 	"database/sql"
 	"log"
+	"time"
+
 	"github.com/wignn/library-api/internal/model"
 )
 
@@ -39,10 +41,7 @@ func GetUserByUsername(db *DB, username string) (*model.User, error) {
 		&user.CreatedAt,
 		&user.UpdatedAt,
 	)
-	if err != nil {
-		return nil, err
-	}
-	return &user, nil
+	return &user, err
 }
 
 func UpdateUserProfile(db *DB, user *model.User) (*model.User, error) {
@@ -61,14 +60,10 @@ func UpdateUserProfile(db *DB, user *model.User) (*model.User, error) {
 	if user.Email == "" {
 		user.Email = currentUser.Email
 	}
-
-	_, err = db.Exec(`UPDATE users SET username = $1, profile_picture = $2, email = $3 WHERE id = $4`,
-		user.Username, user.ProfilePicture, user.Email, user.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	return user, nil
+	user.UpdatedAt = time.Now().Format(time.RFC3339)
+	_, err = db.Exec(`UPDATE users SET username = $1, profile_picture = $2, email = $3, updated_at=$4 WHERE id = $5`,
+		user.Username, user.ProfilePicture, user.Email, user.UpdatedAt, user.ID)
+	return user, err
 }
 
 func UpdateUserToken(db *DB, user *model.User) error {
@@ -90,9 +85,5 @@ func ResetPassword(db *DB, id int, hashedPassword, token string) error {
 		}
 	}
 	_, err = db.Exec(`UPDATE users SET password = $1, token= $2 WHERE id = $3`, hashedPassword, nil, id)
-	if err != nil {
-		log.Printf("Error updating user password: %v\n", err)
-		return err
-	}
 	return err
 }
