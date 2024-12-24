@@ -38,7 +38,7 @@ func CreateBooksHandler(db *repository.DB) gin.HandlerFunc{
 	}
 }
 
-func GetBookList(db *repository.DB) gin.HandlerFunc{
+func GetBookListHandler(db *repository.DB) gin.HandlerFunc{
 	return func (c *gin.Context){
 		books, err := services.GetBooks(db)
 		if err != nil {
@@ -82,6 +82,7 @@ func UpdateBookHandler(db *repository.DB) gin.HandlerFunc{
 		}
 
 		id, err := strconv.Atoi(c.Param("id"))
+
 		if err != nil {
 			log.Printf("UpdateBookHandler: error converting ID: %v", err)
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
@@ -89,6 +90,7 @@ func UpdateBookHandler(db *repository.DB) gin.HandlerFunc{
 		}
 
 		var book model.Book
+		
 		if err := c.ShouldBindBodyWithJSON(&book); err != nil {
 			log.Printf("UpdateBookHandler: error binding JSON: %v", err)
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
@@ -96,6 +98,7 @@ func UpdateBookHandler(db *repository.DB) gin.HandlerFunc{
 		}
 
 		err = services.UpdateBook(db, id, &book)
+		
 		if err != nil {
 			log.Printf("UpdateBookHandler: error updating book: %v", err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})

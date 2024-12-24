@@ -17,6 +17,7 @@ func GetBooks(db *DB) ([]model.Book, error) {
 		log.Printf("GetBooks: error getting books: %v", err)
 		return nil, err
 	}
+	defer rows.Close()
 	var books []model.Book
 	for rows.Next() {
 		var book model.Book

@@ -29,14 +29,14 @@ func InitRoutes(r *gin.Engine, db *repository.DB) {
 
 			//book route
 			aunthenticated.POST("/books", handlers.CreateBooksHandler(db))
-			aunthenticated.GET("/books", handlers.GetBookList(db))
+			aunthenticated.GET("/books", handlers.GetBookListHandler(db))
 			aunthenticated.GET("/books/:id", handlers.GetBookByIdHandler(db))
 			aunthenticated.PUT("/books/:id", handlers.UpdateBookHandler(db))
 
 			//genre route
 			aunthenticated.POST("/genres", handlers.CreateGenreHandler(db))
-			// aunthenticated.GET("/genres", handlers.GetGenreList(db))
-			// aunthenticated.GET("/genres/:id", handlers.GetGenreByIdHandler(db))
+			aunthenticated.GET("/genres", handlers.GetGenreListHandler(db))
+			aunthenticated.GET("/genres/:id", handlers.GetGenreByIdHandler(db))
 			// aunthenticated.PUT("/genres/:id", handlers.UpdateGenreHandler(db))
 		}
 	}
