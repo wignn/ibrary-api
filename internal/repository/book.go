@@ -76,3 +76,8 @@ func GetBookByNaem(db *DB, name string) (*model.Book, error) {
 	err := db.QueryRow(`SELECT * FROM books WHERE title = $1`, name).Scan(&book.ID, &book.Title, &book.Author, &book.PublisedDate, &book.Description, &book.Cover, &book.CreatedAt, &book.UpdatedAt)
 	return &book, err
 }
+
+func DeleteBook(db *DB, id int) error {
+	_, err := db.Exec(`DELETE FROM books WHERE id = $1`, id)
+	return err
+}

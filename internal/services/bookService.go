@@ -20,3 +20,7 @@ func GetBookById(db *repository.DB, id int) (*model.Book, error) {
 func UpdateBook(db *repository.DB,id int, book *model.Book) error {
 	return repository.UpdateBook(db, id, book)
 }
+
+func DeleteBook(db *repository.DB, id int) error {
+	return repository.DeleteBook(db, id)
+}

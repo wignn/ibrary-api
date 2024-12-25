@@ -23,14 +23,14 @@ func CreateBooksHandler(db *repository.DB) gin.HandlerFunc{
 		var book model.Book
 		if err  := c.ShouldBindBodyWithJSON(&book); err != nil {
 			log.Printf("GetBooksHandler: error binding JSON: %v", err)
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+			c.JSON(http.StatusBadRequest, gin.H{"errors": "Invalid request"})
 			return
 		}
 
 		err = services.CreateBook(db, &book)
 		if err != nil {
 			log.Printf("GetBooksHandler: error creating book: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+			c.JSON(http.StatusInternalServerError, gin.H{"errors": "Internal server error"})
 			return
 		}
 
@@ -106,5 +106,32 @@ func UpdateBookHandler(db *repository.DB) gin.HandlerFunc{
 		}
 
 		c.JSON(http.StatusOK, gin.H{"message": "Book updated successfully"})
+	}
+}
+
+func DeleteBookHandler(db *repository.DB) gin.HandlerFunc{
+	return func (c *gin.Context){
+		err := utils.IsAdmin(c)
+		if err != nil {
+			log.Printf("DeleteBookHandler: error checking admin: %v", err)
+			c.JSON(http.StatusUnauthorized, gin.H{"errors": "Unauthorized"})
+			return
+		}
+
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			log.Printf("DeleteBookHandler: error converting ID: %v", err)
+			c.JSON(http.StatusBadRequest, gin.H{"errors": "Invalid ID"})
+			return
+		}
+
+		err = services.DeleteBook(db, id)
+		if err != nil {
+			log.Printf("DeleteBookHandler: error deleting book: %v", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"errors": "Internal server error"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": "Book deleted successfully"})
 	}
 }

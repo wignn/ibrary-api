@@ -32,6 +32,7 @@ func InitRoutes(r *gin.Engine, db *repository.DB) {
 			aunthenticated.GET("/books", handlers.GetBookListHandler(db))
 			aunthenticated.GET("/books/:id", handlers.GetBookByIdHandler(db))
 			aunthenticated.PUT("/books/:id", handlers.UpdateBookHandler(db))
+			aunthenticated.DELETE("/books/:id", handlers.DeleteBookHandler(db))
 
 			//genre route
 			aunthenticated.POST("/genres", handlers.CreateGenreHandler(db))

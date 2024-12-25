@@ -1,4 +1,4 @@
-# USER API SPEC
+# User Api Spec
 
 ## Register User
 
