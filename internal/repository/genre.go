@@ -30,3 +30,10 @@ func GetGenres(db *DB) ([]model.Genre, error) {
 	}
 	return genres, nil
 }
+
+
+func GetGenreById(db *DB, id int) (*model.Genre, error) {
+	var genre model.Genre
+	err := db.QueryRow("SELECT * FROM genres WHERE id = $1", id).Scan(&genre.ID, &genre.Name, &genre.CreatedAt)
+	return &genre, err
+}

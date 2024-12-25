@@ -37,7 +37,7 @@ func InitRoutes(r *gin.Engine, db *repository.DB) {
 			aunthenticated.POST("/genres", handlers.CreateGenreHandler(db))
 			aunthenticated.GET("/genres", handlers.GetGenreListHandler(db))
 			aunthenticated.GET("/genres/:id", handlers.GetGenreByIdHandler(db))
-			// aunthenticated.PUT("/genres/:id", handlers.UpdateGenreHandler(db))
+			aunthenticated.PUT("/genres/:id", handlers.UpdateGenreHandler(db))
 		}
 	}
 }
