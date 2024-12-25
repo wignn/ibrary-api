@@ -16,13 +16,13 @@ func CreateGenreHandler(db *repository.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var book model.Genre
 		if err := c.ShouldBindBodyWithJSON(&book); err != nil {
-			c.JSON(400, gin.H{"error": "Invalid request"})
+			c.JSON(400, gin.H{"errors": "Invalid request"})
 			return
 		}
 		err := services.CreateGenre(db, &book)
 		if err != nil {
 			log.Printf("eror create genre: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 			return
 		}
 		c.JSON(http.StatusOK, gin.H{"message": "Genre created successfully"})

@@ -43,7 +43,7 @@ func GetBookListHandler(db *repository.DB) gin.HandlerFunc{
 		books, err := services.GetBooks(db)
 		if err != nil {
 			log.Printf("GetBooksHandler: error getting books: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+			c.JSON(http.StatusInternalServerError, gin.H{"errors": "Internal server error"})
 			return
 		}
 
@@ -57,14 +57,14 @@ func GetBookByIdHandler(db *repository.DB) gin.HandlerFunc{
 		id, err := strconv.Atoi(c.Param("id"))
 		if err != nil {
 			log.Printf("GetBookByIdHandler: error converting ID: %v", err)
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+			c.JSON(http.StatusBadRequest, gin.H{"errors": "Invalid ID"})
 			return
 		}
 
 		book, err := services.GetBookById(db, id)
 		if err != nil {
 			log.Printf("GetBookByIdHandler: error getting book by ID: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+			c.JSON(http.StatusInternalServerError, gin.H{"errors": "Internal server error"})
 			return
 		}
 
@@ -77,7 +77,7 @@ func UpdateBookHandler(db *repository.DB) gin.HandlerFunc{
 		err := utils.IsAdmin(c)
 		if err != nil {
 			log.Printf("UpdateBookHandler: error checking admin: %v", err)
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+			c.JSON(http.StatusUnauthorized, gin.H{"errors": "Unauthorized"})
 			return
 		}
 
@@ -85,7 +85,7 @@ func UpdateBookHandler(db *repository.DB) gin.HandlerFunc{
 
 		if err != nil {
 			log.Printf("UpdateBookHandler: error converting ID: %v", err)
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+			c.JSON(http.StatusBadRequest, gin.H{"errors": "Invalid ID"})
 			return
 		}
 
@@ -93,7 +93,7 @@ func UpdateBookHandler(db *repository.DB) gin.HandlerFunc{
 		
 		if err := c.ShouldBindBodyWithJSON(&book); err != nil {
 			log.Printf("UpdateBookHandler: error binding JSON: %v", err)
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+			c.JSON(http.StatusBadRequest, gin.H{"errors": "Invalid request"})
 			return
 		}
 
@@ -101,7 +101,7 @@ func UpdateBookHandler(db *repository.DB) gin.HandlerFunc{
 		
 		if err != nil {
 			log.Printf("UpdateBookHandler: error updating book: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+			c.JSON(http.StatusInternalServerError, gin.H{"errors": "Internal server error"})
 			return
 		}
 
