@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"time"
 
@@ -9,8 +10,13 @@ import (
 )
 
 func CreateUser(db *DB, user *model.User) error {
-	_, err := db.Exec(`INSERT INTO users (username, email, password) VALUES ($1, $2, $3)`, user.Username, user.Email, user.Password)
-	return err
+	existingUser, err := GetUserByUsername(db, user.Username)
+	if err == nil && existingUser != nil {
+		log.Println("error creating user: ", err)
+		return fmt.Errorf("user already exists")
+	}
+	_, err = db.Exec(`INSERT INTO users (username, email, password) VALUES ($1, $2, $3)`, user.Username, user.Email, user.Password)
+	return fmt.Errorf("error creating user")
 }
 
 func GetUserById(db *DB, id int) (*model.GetUserResponse, error) {

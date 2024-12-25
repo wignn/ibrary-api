@@ -22,7 +22,7 @@ func CreateGenreHandler(db *repository.DB) gin.HandlerFunc {
 		err := services.CreateGenre(db, &book)
 		if err != nil {
 			log.Printf("eror create genre: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 		c.JSON(http.StatusOK, gin.H{"message": "Genre created successfully"})

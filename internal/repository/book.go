@@ -1,12 +1,13 @@
 package repository
 
 import (
-	"github.com/wignn/library-api/internal/model"
 	"log"
 	"time"
+	"github.com/wignn/library-api/internal/model"
 )
 
 func CreateBook(db *DB, book *model.Book) error {
+
 	_, err := db.Exec(`INSERT INTO books (title, author, published_date, description, cover) VALUES ($1, $2, $3, $4, $5)`, book.Title, book.Author, book.PublisedDate, book.Description, book.Cover)
 	return err
 }
@@ -67,4 +68,11 @@ func UpdateBook(db *DB, id int, book *model.Book) error {
 
 	_, err = db.Exec(`UPDATE books SET title = $1, author = $2, published_date = $3, description = $4, cover = $5, updated_at =$6 WHERE id = $7`, book.Title, book.Author, book.PublisedDate, book.Description, book.Cover, book.UpdatedAt, id)
 	return err
+}
+
+
+func GetBookByNaem(db *DB, name string) (*model.Book, error) {
+	var book model.Book
+	err := db.QueryRow(`SELECT * FROM books WHERE title = $1`, name).Scan(&book.ID, &book.Title, &book.Author, &book.PublisedDate, &book.Description, &book.Cover, &book.CreatedAt, &book.UpdatedAt)
+	return &book, err
 }

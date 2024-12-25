@@ -1,14 +1,20 @@
 package repository
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/wignn/library-api/internal/model"
 )
 
 func CreateGenre(db *DB, genre *model.Genre) error {
-	_, err := db.Exec("INSERT INTO genres (name) VALUES ($1)", genre.Name)
-	return err
+	existingGenre, err := GetGenreByName(db, genre.Name)
+	if err == nil && existingGenre != nil {
+		return fmt.Errorf("genre already exists")
+	}
+	_, err = db.Exec("INSERT INTO genres (name) VALUES ($1)", genre.Name)
+	log.Printf("error creating genre: %v",err )
+	return fmt.Errorf("error creating genre")
 }
 
 func GetGenres(db *DB) ([]model.Genre, error) {
@@ -40,4 +46,11 @@ func GetGenreById(db *DB, id int) (*model.Genre, error) {
 func UpdateGenre(db *DB, id int, genre *model.Genre) error {
 	_, err := db.Exec("UPDATE genres SET name = $1 WHERE id = $2", genre.Name, id)
 	return err
+}
+
+
+func GetGenreByName(db *DB, name string) (*model.Genre, error) {
+	var genre model.Genre
+	err := db.QueryRow("SELECT * FROM genres WHERE name = $1", name).Scan(&genre.ID, &genre.Name, &genre.CreatedAt)
+	return &genre, err
 }
