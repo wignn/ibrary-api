@@ -21,7 +21,7 @@ func GetGenres(db *DB) ([]model.Genre, error) {
 	var genres []model.Genre
 	for rows.Next() {
 		var genre model.Genre
-		err := rows.Scan(&genre.ID, &genre.Name ,&genre.CreatedAt)
+		err := rows.Scan(&genre.ID, &genre.Name, &genre.CreatedAt)
 		if err != nil {
 			log.Printf("GetGenres: error scanning genre: %v", err)
 			return nil, err
@@ -31,9 +31,13 @@ func GetGenres(db *DB) ([]model.Genre, error) {
 	return genres, nil
 }
 
-
 func GetGenreById(db *DB, id int) (*model.Genre, error) {
 	var genre model.Genre
 	err := db.QueryRow("SELECT * FROM genres WHERE id = $1", id).Scan(&genre.ID, &genre.Name, &genre.CreatedAt)
 	return &genre, err
+}
+
+func UpdateGenre(db *DB, id int, genre *model.Genre) error {
+	_, err := db.Exec("UPDATE genres SET name = $1 WHERE id = $2", genre.Name, id)
+	return err
 }
