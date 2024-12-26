@@ -57,7 +57,7 @@ func UpdateUserHandler(db *repository.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{updated_at})
+		c.JSON(http.StatusOK, gin.H{"message": "User profile updated successfully"})
 	}
 }
 

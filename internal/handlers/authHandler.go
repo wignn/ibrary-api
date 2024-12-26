@@ -40,7 +40,7 @@ func RegisterHandler(db *repository.DB) gin.HandlerFunc {
 		err := services.RegisterRequest(db, &user)
 		if err != nil {
 			log.Printf("RegisterHandler: error registering user: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"errors": "user already exists"})
 			return
 		}
 
