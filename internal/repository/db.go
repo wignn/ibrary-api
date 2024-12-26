@@ -10,6 +10,8 @@ import (
 type DB struct {
 	*sql.DB
 }
+
+
 func InitDb() (*DB, error) {
 	url := os.Getenv("DATABASE_URL")
 	db, err := sql.Open("postgres", url)
@@ -32,7 +34,7 @@ func InitDb() (*DB, error) {
 	}
 	
 	log.Println("Tables created successfully.")
-	return &DB{db}, nil
+	return &DB{DB: db}, nil
 }
 
 
