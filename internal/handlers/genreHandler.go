@@ -89,4 +89,28 @@ func UpdateGenreHandler(db *repository.DB) gin.HandlerFunc{
 
 		c.JSON(http.StatusOK, gin.H{"message": "Genre updated successfully"})
 	}
+
+
+}
+
+func DeleteGenreHandler(db *repository.DB) gin.HandlerFunc{
+	return func(c *gin.Context){
+		id, err := strconv.Atoi(c.Param("id"))
+
+		if err != nil {
+			log.Printf("error converting ID: %v", err)
+			c.JSON(http.StatusBadRequest, gin.H{"error": "validation error"})
+			return
+		}
+
+		err = services.DeleteGenre(db, id)
+
+		if err != nil {
+			log.Printf("error deleting genre: %v", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": "Genre deleted successfully"})
+	}
 }

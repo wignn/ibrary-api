@@ -92,3 +92,14 @@ func GetGenreByName(db *DB, name string) (*model.Genre, error) {
 
 	return &genre, err
 }
+
+
+func DeleteGenre(db *DB, id int) error {
+	stmt, err := db.Prepare("DELETE FROM genres WHERE id = $1")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(id)	
+	return err
+}

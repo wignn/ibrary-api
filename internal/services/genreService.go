@@ -21,3 +21,7 @@ func GetGenreById(db *repository.DB, id int) (*model.Genre, error) {
 func UpdateGenre(db *repository.DB, id int, genre *model.Genre) error {
 	return repository.UpdateGenre(db, id, genre)
 }
+
+func DeleteGenre(db *repository.DB, id int) error {
+	return repository.DeleteGenre(db, id)
+}
