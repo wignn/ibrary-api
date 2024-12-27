@@ -41,6 +41,10 @@ func InitRoutes(r *gin.Engine, db *repository.DB) {
 			aunthenticated.PUT("/genres/:id", handlers.UpdateGenreHandler(db))
 			aunthenticated.DELETE("/genres/:id", handlers.DeleteGenreHandler(db))	
 
+			//bookmark route
+			aunthenticated.POST("/bookmarks", handlers.CreateBookmarkHandler(db))
+			aunthenticated.DELETE("/bookmarks/:id", handlers.DeleteBookmarkHandler(db))
+			aunthenticated.GET("/bookmarks", handlers.GetBookmarkListHandler(db))	
 		}
 	}
 }
