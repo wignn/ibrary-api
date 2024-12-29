@@ -114,3 +114,21 @@ func DeleteGenreHandler(db *repository.DB) gin.HandlerFunc{
 		c.JSON(http.StatusOK, gin.H{"message": "Genre deleted successfully"})
 	}
 }
+
+func AddGenreToBookHandler(db *repository.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var genre model.BookGenre
+		if err := c.ShouldBindBodyWithJSON(&genre); err != nil {
+			log.Printf("AddGenreToBookHandler: error binding JSON: %v", err)
+			c.JSON(http.StatusBadRequest, gin.H{"errors": "Invalid request"})
+			return
+		}
+		err := services.AddGenreToBook(db, &genre)
+		if err != nil {
+			log.Printf("AddGenreToBookHandler: error adding genre to book: %v", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"errors": "Internal server error"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "Genre added to book successfully"})
+	}
+	}

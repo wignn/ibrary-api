@@ -103,3 +103,14 @@ func DeleteGenre(db *DB, id int) error {
 	_, err = stmt.Exec(id)	
 	return err
 }
+
+func AddGenreToBook(db *DB, id *model.BookGenre) error {
+	stmt, err := db.Prepare("INSERT INTO book_genre (book_id, genre_id) VALUES ($1, $2)")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(id.BookID, id.GenreID)
+	return err
+}

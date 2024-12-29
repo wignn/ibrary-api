@@ -25,3 +25,7 @@ func UpdateGenre(db *repository.DB, id int, genre *model.Genre) error {
 func DeleteGenre(db *repository.DB, id int) error {
 	return repository.DeleteGenre(db, id)
 }
+
+func AddGenreToBook(db *repository.DB, id *model.BookGenre) error {
+	return repository.AddGenreToBook(db, id)
+}
