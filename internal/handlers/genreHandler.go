@@ -11,7 +11,6 @@ import (
 	"github.com/wignn/library-api/internal/services"
 )
 
-
 func CreateGenreHandler(db *repository.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var book model.Genre
@@ -41,8 +40,8 @@ func GetGenreListHandler(db *repository.DB) gin.HandlerFunc {
 	}
 }
 
-func GetGenreByIdHandler(db *repository.DB) gin.HandlerFunc{
-	return func(c *gin.Context){
+func GetGenreByIdHandler(db *repository.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
 		id, err := strconv.Atoi(c.Param("id"))
 
 		if err != nil {
@@ -62,9 +61,8 @@ func GetGenreByIdHandler(db *repository.DB) gin.HandlerFunc{
 	}
 }
 
-
-func UpdateGenreHandler(db *repository.DB) gin.HandlerFunc{
-	return func(c *gin.Context){
+func UpdateGenreHandler(db *repository.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
 		id, err := strconv.Atoi(c.Param("id"))
 
 		if err != nil {
@@ -90,11 +88,10 @@ func UpdateGenreHandler(db *repository.DB) gin.HandlerFunc{
 		c.JSON(http.StatusOK, gin.H{"message": "Genre updated successfully"})
 	}
 
-
 }
 
-func DeleteGenreHandler(db *repository.DB) gin.HandlerFunc{
-	return func(c *gin.Context){
+func DeleteGenreHandler(db *repository.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
 		id, err := strconv.Atoi(c.Param("id"))
 
 		if err != nil {
@@ -131,4 +128,22 @@ func AddGenreToBookHandler(db *repository.DB) gin.HandlerFunc {
 		}
 		c.JSON(http.StatusOK, gin.H{"message": "Genre added to book successfully"})
 	}
-	}
+}
+
+// func GetBooksByGenreBookHandler(db *repository.DB) gin.HandlerFunc {
+// 	return func(c *gin.Context) {
+// 		id, err := strconv.Atoi(c.Param("id"))
+// 		if err != nil {
+// 			log.Printf("GetBooksByGenreHandler: error converting ID: %v", err)
+// 			c.JSON(http.StatusBadRequest, gin.H{"errors": "Invalid ID"})
+// 			return
+// 		}
+// 		books, err := services.GetBooksByGenreBook(db, id)
+// 		if err != nil {
+// 			log.Printf("GetBooksByGenreHandler: error getting books by genre: %v", err)
+// 			c.JSON(http.StatusInternalServerError, gin.H{"errors": "Internal server error"})
+// 			return
+// 		}
+// 		c.JSON(http.StatusOK, books)
+// 	}
+// }

@@ -92,7 +92,7 @@ func UpdateBook(db *DB, id int, book *model.Book) error {
 	return err
 }
 
-func GetBookByNaem(db *DB, name string) (*model.Book, error) {
+func GetBookByName(db *DB, name string) (*model.Book, error) {
 	stmt, err := db.Prepare(`SELECT * FROM books WHERE title = $1`)
 	if err != nil {
 		log.Printf("GetBookByNaem: error preparing statement: %v", err)

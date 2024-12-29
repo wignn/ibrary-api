@@ -114,3 +114,55 @@ func AddGenreToBook(db *DB, id *model.BookGenre) error {
 	_, err = stmt.Exec(id.BookID, id.GenreID)
 	return err
 }
+
+func GetBookGenres(db *DB, id int) ([]model.Genre, error) {
+	stmt, err := db.Prepare(`SELECT genres.id, genres.name, genres.created_at FROM genres
+	JOIN book_genre ON genres.id = book_genre.genre_id
+	WHERE book_genre.book_id = $1 OR genres.id = $1`)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query(id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var genres []model.Genre
+	for rows.Next() {
+		var genre model.Genre
+		if err := rows.Scan(&genre.ID, &genre.Name, &genre.CreatedAt); err != nil {
+			return nil, err
+		}
+		genres = append(genres, genre)
+	}
+	return genres, err
+}
+
+// func GetBooksByGenre(db *DB, genreID int) ([]model.Book, error) {
+// 	stmt, err := db.Prepare(`SELECT books.id, books.title, books.author, books.published_at FROM books
+// 	JOIN book_genre ON books.id = book_genre.book_id
+// 	WHERE book_genre.genre_id = $1`)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	defer stmt.Close()
+
+// 	rows, err := stmt.Query(genreID)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	defer rows.Close()
+
+// 	var books []model.Book
+// 	for rows.Next() {
+// 		var book model.Book
+// 		if err := rows.Scan(&book.ID, &book.Title, &book.Author, &book.); err != nil {
+// 			return nil, err
+// 		}
+// 		books = append(books, book)
+// 	}
+// 	return books, err
+// }
